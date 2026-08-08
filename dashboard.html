@@ -3,171 +3,310 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Predictive Maintenance Dashboard</title>
+  <title>Predictive Maintenance Command Center</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --panel-2: #1f2937;
-      --text: #f9fafb;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-2: #34d399;
-      --warn: #f59e0b;
-      --danger: #ef4444;
+      --bg: #07111f;
+      --panel: rgba(10, 20, 36, 0.9);
+      --panel-2: rgba(16, 28, 47, 0.95);
+      --text: #f7fbff;
+      --muted: #93a5c0;
+      --accent: #4fd1c5;
+      --accent-2: #7c93ff;
+      --warn: #fbbf24;
+      --danger: #ff6b6b;
+      --border: rgba(255,255,255,0.08);
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #020617, #111827);
+      background:
+        radial-gradient(circle at top left, rgba(79, 209, 197, 0.2), transparent 24%),
+        linear-gradient(135deg, #040b16 0%, #0c1728 45%, #111c2f 100%);
       color: var(--text);
-      padding: 24px;
+      padding: 28px;
     }
-    .header {
-      display: flex; justify-content: space-between; align-items: center; gap: 16px;
-      margin-bottom: 20px;
+
+    .shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
     }
-    .header h1 { margin: 0; font-size: 28px; }
-    .header p { margin: 4px 0 0; color: var(--muted); }
-    .grid { display: grid; gap: 16px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 26px;
+      background: linear-gradient(120deg, rgba(12,24,44,0.95), rgba(20,34,58,0.95));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.6;
+    }
+
+    .badge {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(79, 209, 197, 0.15);
+      color: var(--accent);
+      font-weight: 700;
+      border: 1px solid rgba(79, 209, 197, 0.2);
+      white-space: nowrap;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
     .card {
-      background: rgba(17,24,39,0.95);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      background: linear-gradient(145deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
     }
-    .card .label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
-    .card .value { font-size: 24px; font-weight: 700; margin-top: 8px; }
-    .card .delta { margin-top: 6px; color: var(--accent-2); font-size: 13px; }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(130deg, rgba(255,255,255,0.06), transparent 55%);
+      pointer-events: none;
+    }
+
+    .card .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+
+    .card .value {
+      font-size: 26px;
+      font-weight: 800;
+      margin-top: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .card .delta {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1.35fr 0.95fr;
+    }
 
     .panel {
-      background: rgba(17,24,39,0.95);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      background: linear-gradient(145deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
     }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    th { color: var(--muted); font-weight: 600; }
-    .good { color: var(--accent-2); }
-    .warn { color: var(--warn); }
-    .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
-    .chart-grid img { width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
-    .recommendations { display: grid; gap: 12px; margin-top: 10px; }
+
+    .panel h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .good { color: var(--accent); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+
+    .recommendations {
+      display: grid;
+      gap: 10px;
+    }
+
     .recommendations div {
-      background: rgba(31,41,55,0.9);
-      padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.04);
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #dce9f9;
+      line-height: 1.55;
     }
-    @media (max-width: 900px) {
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .chart-grid img {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #fff;
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
       .chart-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 16px; }
+      .hero { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div>
-      <h1>AI Predictive Maintenance Dashboard</h1>
-      <p>Machine health monitoring, failure prediction, and preventive actions</p>
-    </div>
-  </div>
-
-  <div class="cards">
-    <div class="card">
-      <div class="label">Records</div>
-      <div class="value">5,000</div>
-      <div class="delta">Synthetic analysis dataset</div>
-    </div>
-    <div class="card">
-      <div class="label">Machines</div>
-      <div class="value">25</div>
-      <div class="delta">Tracked assets</div>
-    </div>
-    <div class="card">
-      <div class="label">Failure Rate</div>
-      <div class="value">66.54%</div>
-      <div class="delta">High-risk operating profile</div>
-    </div>
-    <div class="card">
-      <div class="label">Top Model</div>
-      <div class="value">XGBoost</div>
-      <div class="delta">Best recall for early alerts</div>
-    </div>
-  </div>
-
-  <div class="grid" style="margin-top:16px;">
-    <div class="panel">
-      <h3>Model Performance Comparison</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Model</th>
-            <th>Accuracy</th>
-            <th>Precision</th>
-            <th>Recall</th>
-            <th>F1</th>
-            <th>ROC-AUC</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>XGBoost</td>
-            <td class="good">0.663</td>
-            <td>0.6723</td>
-            <td class="good">0.9624</td>
-            <td class="good">0.7916</td>
-            <td>0.5763</td>
-          </tr>
-          <tr>
-            <td>Random Forest</td>
-            <td>0.627</td>
-            <td>0.6877</td>
-            <td>0.8045</td>
-            <td>0.7415</td>
-            <td>0.5660</td>
-          </tr>
-          <tr>
-            <td>Logistic Regression</td>
-            <td>0.552</td>
-            <td>0.7183</td>
-            <td>0.5368</td>
-            <td>0.6145</td>
-            <td>0.5965</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="shell">
+    <div class="hero">
+      <div>
+        <h1>Predictive Maintenance Command Center</h1>
+        <p>Monitor fleet health, detect risk patterns early, and coordinate preventive actions with a calm, executive-ready view.</p>
+      </div>
+      <div class="badge">Live Operations • Active Monitoring</div>
     </div>
 
-    <div class="panel">
-      <h3>Recommendations</h3>
-      <div class="recommendations">
-        <div>Prioritize inspection for machines with high vibration, elevated temperature, and severe maintenance history.</div>
-        <div>Schedule preventive maintenance before failure rates exceed the alert threshold for each machine cluster.</div>
-        <div>Tighten operating thresholds for temperature, vibration, pressure, humidity, voltage, and current to reduce abnormal states.</div>
+    <div class="cards">
+      <div class="card">
+        <div class="label">Records</div>
+        <div class="value">5,000</div>
+        <div class="delta">Synthetic analysis dataset</div>
+      </div>
+      <div class="card">
+        <div class="label">Machines</div>
+        <div class="value">25</div>
+        <div class="delta">Tracked assets</div>
+      </div>
+      <div class="card">
+        <div class="label">Failure Risk</div>
+        <div class="value">66.54%</div>
+        <div class="delta">High-risk operating profile</div>
+      </div>
+      <div class="card">
+        <div class="label">Top Model</div>
+        <div class="value">XGBoost</div>
+        <div class="delta">Highest early-alert recall</div>
       </div>
     </div>
-  </div>
 
-  <div class="chart-grid">
-    <div class="panel">
-      <h3>Correlation Heatmap</h3>
-      <img src="outputs/correlation_heatmap.png" alt="Correlation heatmap" />
+    <div class="grid">
+      <div class="panel">
+        <h3>Model Performance Comparison</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1</th>
+              <th>ROC-AUC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>XGBoost</td>
+              <td class="good">0.663</td>
+              <td>0.6723</td>
+              <td class="good">0.9624</td>
+              <td class="good">0.7916</td>
+              <td>0.5763</td>
+            </tr>
+            <tr>
+              <td>Random Forest</td>
+              <td>0.627</td>
+              <td>0.6877</td>
+              <td>0.8045</td>
+              <td>0.7415</td>
+              <td>0.5660</td>
+            </tr>
+            <tr>
+              <td>Logistic Regression</td>
+              <td>0.552</td>
+              <td>0.7183</td>
+              <td>0.5368</td>
+              <td>0.6145</td>
+              <td>0.5965</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h3>Operational Recommendations</h3>
+        <div class="recommendations">
+          <div>Prioritize inspections for assets with elevated vibration, temperature spikes, and repeated maintenance issues.</div>
+          <div>Schedule preventive maintenance before failure rates breach the alert threshold for each machine cluster.</div>
+          <div>Tighten operating thresholds for temperature, vibration, pressure, humidity, voltage, and current to reduce abnormal states.</div>
+        </div>
+      </div>
     </div>
-    <div class="panel">
-      <h3>Feature Importance</h3>
-      <img src="outputs/feature_importance.png" alt="Feature importance plot" />
-    </div>
-    <div class="panel">
-      <h3>Confusion Matrices</h3>
-      <img src="outputs/confusion_matrices.png" alt="Confusion matrix comparison" />
-    </div>
-    <div class="panel">
-      <h3>Failure Trend</h3>
-      <img src="outputs/failure_trend.png" alt="Failure trend chart" />
+
+    <div class="chart-grid">
+      <div class="panel">
+        <h3>Correlation Heatmap</h3>
+        <img src="outputs/correlation_heatmap.png" alt="Correlation heatmap" />
+      </div>
+      <div class="panel">
+        <h3>Feature Importance</h3>
+        <img src="outputs/feature_importance.png" alt="Feature importance plot" />
+      </div>
+      <div class="panel">
+        <h3>Confusion Matrices</h3>
+        <img src="outputs/confusion_matrices.png" alt="Confusion matrix comparison" />
+      </div>
+      <div class="panel">
+        <h3>Failure Trend</h3>
+        <img src="outputs/failure_trend.png" alt="Failure trend chart" />
+      </div>
     </div>
   </div>
 </body>
