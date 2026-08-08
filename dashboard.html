@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictive Maintenance Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #f9fafb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #34d399;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #020617, #111827);
+      color: var(--text);
+      padding: 24px;
+    }
+    .header {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      margin-bottom: 20px;
+    }
+    .header h1 { margin: 0; font-size: 28px; }
+    .header p { margin: 4px 0 0; color: var(--muted); }
+    .grid { display: grid; gap: 16px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .card {
+      background: rgba(17,24,39,0.95);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .card .label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .card .value { font-size: 24px; font-weight: 700; margin-top: 8px; }
+    .card .delta { margin-top: 6px; color: var(--accent-2); font-size: 13px; }
+
+    .panel {
+      background: rgba(17,24,39,0.95);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    th { color: var(--muted); font-weight: 600; }
+    .good { color: var(--accent-2); }
+    .warn { color: var(--warn); }
+    .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+    .chart-grid img { width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+    .recommendations { display: grid; gap: 12px; margin-top: 10px; }
+    .recommendations div {
+      background: rgba(31,41,55,0.9);
+      padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+    }
+    @media (max-width: 900px) {
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>AI Predictive Maintenance Dashboard</h1>
+      <p>Machine health monitoring, failure prediction, and preventive actions</p>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="label">Records</div>
+      <div class="value">5,000</div>
+      <div class="delta">Synthetic analysis dataset</div>
+    </div>
+    <div class="card">
+      <div class="label">Machines</div>
+      <div class="value">25</div>
+      <div class="delta">Tracked assets</div>
+    </div>
+    <div class="card">
+      <div class="label">Failure Rate</div>
+      <div class="value">66.54%</div>
+      <div class="delta">High-risk operating profile</div>
+    </div>
+    <div class="card">
+      <div class="label">Top Model</div>
+      <div class="value">XGBoost</div>
+      <div class="delta">Best recall for early alerts</div>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:16px;">
+    <div class="panel">
+      <h3>Model Performance Comparison</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+            <th>ROC-AUC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>XGBoost</td>
+            <td class="good">0.663</td>
+            <td>0.6723</td>
+            <td class="good">0.9624</td>
+            <td class="good">0.7916</td>
+            <td>0.5763</td>
+          </tr>
+          <tr>
+            <td>Random Forest</td>
+            <td>0.627</td>
+            <td>0.6877</td>
+            <td>0.8045</td>
+            <td>0.7415</td>
+            <td>0.5660</td>
+          </tr>
+          <tr>
+            <td>Logistic Regression</td>
+            <td>0.552</td>
+            <td>0.7183</td>
+            <td>0.5368</td>
+            <td>0.6145</td>
+            <td>0.5965</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>Recommendations</h3>
+      <div class="recommendations">
+        <div>Prioritize inspection for machines with high vibration, elevated temperature, and severe maintenance history.</div>
+        <div>Schedule preventive maintenance before failure rates exceed the alert threshold for each machine cluster.</div>
+        <div>Tighten operating thresholds for temperature, vibration, pressure, humidity, voltage, and current to reduce abnormal states.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="panel">
+      <h3>Correlation Heatmap</h3>
+      <img src="outputs/correlation_heatmap.png" alt="Correlation heatmap" />
+    </div>
+    <div class="panel">
+      <h3>Feature Importance</h3>
+      <img src="outputs/feature_importance.png" alt="Feature importance plot" />
+    </div>
+    <div class="panel">
+      <h3>Confusion Matrices</h3>
+      <img src="outputs/confusion_matrices.png" alt="Confusion matrix comparison" />
+    </div>
+    <div class="panel">
+      <h3>Failure Trend</h3>
+      <img src="outputs/failure_trend.png" alt="Failure trend chart" />
+    </div>
+  </div>
+</body>
+</html>
